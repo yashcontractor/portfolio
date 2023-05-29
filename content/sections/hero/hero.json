@@ -1,0 +1,21 @@
+{
+  "intro": "Hello there,",
+  "heroPhoto": {
+    "src": "../../images/lego-dummy.png",
+    "alt": "My Photo"
+  },
+  "image": {
+    "src": "",
+    "alt": "Waving Hand Emoji"
+  },
+  "title": "welcome to my portfolio!",
+  "subtitle": {
+
+  },
+  "description": "Last year Computer Engineering Student seeking New Grad SWE opportunities",
+  "socialProfiles": {
+    "from": ["LinkedIn", "Medium", "Github", "Mail"],
+    "showIcons": true
+  }
+}
+  

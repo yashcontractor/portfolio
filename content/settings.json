@@ -1,0 +1,43 @@
+{
+  "siteMetadata": {
+    "language": "en",
+    "siteUrl": "https://gatsby-starter-portfolio-minimal-theme.netlify.app/",
+    "title": "Gatsby Starter for Portfolio Minimal",
+    "titleTemplate": "%s · Portfolio Minimal",
+    "description": "Final year Computer Engineering Student seeking New Grad SWE opportunities",
+    "author": "Yash Contractor",
+    "avatar": "",
+    "bio": "",
+    "social": {
+      "behance": "https://behance.com",
+      "github": "https://github.com/yashcontractor",
+      "medium": "",
+      "linkedin": "https://www.linkedin.com/in/yashcontractor/",
+      "mail": "mailto:yashcontractor009@gmail.com"
+    }
+  },
+  "siteConfiguration": {
+    "logo": { "text": "Yash Contractor" },
+    "navigation": {
+      "header": [
+        { "label": "About", "url": "/#about" },
+        { "label": "Projects", "url": "/#features" },
+        { "label": "Github", "url": "/#github" }
+      ],
+      "ctaButton": {
+        "openNewTab": true,
+        "label": "Resume",
+        "url": "/Yash Contractor - Resume.pdf"
+      },
+      "footer": [
+        { "label": "", "url": "" },
+        { "label": "", "url": "" }
+      ]
+    },
+    "featureToggles": {
+      "useDarkModeAsDefault": false,
+      "useDarkModeBasedOnUsersPreference": true,
+      "useCookieBar": false
+    }
+  }
+}

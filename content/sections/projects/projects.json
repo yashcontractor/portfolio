@@ -1,0 +1,49 @@
+{
+  "projects": [
+    {
+      "visible": true,
+      "category": "💻C++",
+      "title": "Raytracer",
+      "description": "Due to my recent growing interest in 3D graphics, I decided to take the challenge to build a Raytracer program that takes the input positions of two distinct text files, and outputs an image in a .ppm file based on the camera and light positions decribed in the text files.",
+      "tags": ["January 2023"],
+      "image": {
+        "src": "../../images/clement-h-95YRwf6CNw8-unsplash.jpg",
+        "alt": "Quick Setup",
+        "linkTo": "https://github.com/yashcontractor/Raytracer"
+      },
+      "links": [
+        {
+          "type": "github",
+          "url": "https://github.com/yashcontractor/Raytracer"
+        },
+        {
+          "type": "",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "visible": true,
+      "category": "💻JavaScript",
+      "title": "3D Fish Bowl Animation",
+      "description": "Wrote a JavaScript program that animates a fish rotating around moving seaweeds along with a floating humanoid in a fishbowl!",
+      "tags": ["October 2022"],
+      "image": {
+        "src": "../../images/fish.PNG",
+        "alt": "Extendable Layout",
+        "linkTo": "https://github.com/yashcontractor/fish-bowl-animation"
+      },
+      "links": [
+        {
+          "type": "github",
+          "url": "https://github.com/yashcontractor/fish-bowl-animation"
+        }
+      ]
+    }
+  ],
+  "button": {
+    "visible": true,
+    "label": "Visit on Github",
+    "url": "https://github.com/yashcontractor/"
+  }
+}

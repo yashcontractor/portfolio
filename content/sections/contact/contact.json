@@ -1,0 +1,13 @@
+{
+  "name": "Yash Contractor",
+  "email": "yashcontractor009@gmail.com",
+  "description": "",
+  "image": {
+    "src": "../../images/favicon.jpg",
+    "alt": "Gatsby Logo"
+  },
+  "socialProfiles": {
+    "from": ["LinkedIn", "Medium", "Github", "Mail"],
+    "showIcons": true
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "interests": [
+    {
+      "label": "Java",
+      "image": {
+        "src": "../../images/icons8-java-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "JavaScript",
+      "image": {
+        "src": "../../images/icons8-javascript-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "C",
+      "image": {
+        "src": "../../images/icons8-c-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "C++",
+      "image": {
+        "src": "../../images/icons8-c++-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "C#",
+      "image": {
+        "src": "../../images/Csharp_Logo.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "Python",
+      "image": {
+        "src": "../../images/icons8-python-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "React.JS",
+      "image": {
+        "src": "../../images/icons8-react-16.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "Angular.JS",
+      "image": {
+        "src": "../../images/icons8-angular-50.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "Git",
+      "image": {
+        "src": "../../images/icons8-git-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "Docker",
+      "image": {
+        "src": "../../images/icons8-docker-48.png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "OpenGL",
+      "image": {
+        "src": "../../images/Opengl-logo.svg (1).png",
+        "alt": ""
+      }
+    },
+    {
+      "label": "Postman",
+      "image": {
+        "src": "../../images/postman-icon.png",
+        "alt": ""
+      }
+    }
+  ],
+  "button": {
+    "visible": true,
+    "label": "+ Load More",
+    "initiallyShownInterests": 30
+  }
+}
