@@ -27,7 +27,7 @@
       "ctaButton": {
         "openNewTab": true,
         "label": "Resume",
-        "url": "/Yash Contractor - Resume.pdf"
+        "url": "/resume.pdf"
       },
       "footer": [
         { "label": "", "url": "" },
