@@ -19,19 +19,6 @@ function attachWorkCardTilt() {
       card.style.setProperty("--rx", "0deg");
       card.style.setProperty("--ry", "0deg");
     });
-    // The YouTube iframe swallows mouse events, freezing the tilt mid-hover.
-    // Keep it non-interactive for tracking, but briefly re-enable it on click
-    // so the embedded play button still works.
-    const iframe = card.querySelector("iframe");
-    if (iframe) {
-      iframe.style.pointerEvents = "none";
-      card.addEventListener("mousedown", () => {
-        iframe.style.pointerEvents = "auto";
-        setTimeout(() => {
-          iframe.style.pointerEvents = "none";
-        }, 300);
-      });
-    }
   });
 }
 attachWorkCardTilt();
