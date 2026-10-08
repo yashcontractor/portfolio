@@ -371,8 +371,6 @@ body {
   transform: translateY(0) rotate(var(--tilt, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 .work-card.reveal.is-visible:hover {
-  border-color: var(--gold);
-  box-shadow: 0 16px 40px rgba(231, 182, 76,0.12);
   transform: translateY(-6px) rotate(var(--tilt, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 .work-card iframe {
