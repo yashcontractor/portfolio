@@ -10,6 +10,7 @@
 <body>
 
   <canvas id="stars-canvas" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
 
   <nav class="scroll-dots" aria-hidden="true">
     <a href="#top" class="scroll-dots__dot" data-target="top" aria-label="Top"></a>
@@ -24,11 +25,15 @@
       <a href="#about">About</a>
       <a href="#work">My Work</a>
       <a href="#contact">Contact</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light mode">
+        <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </nav>
 
   <header id="top" class="hero">
-    <h1 class="hero__title reveal">yash contractor</h1>
+    <h1 class="hero__title reveal">Yash Contractor</h1>
     <p class="hero__role reveal">Content Creator&nbsp;&nbsp;&bull;&nbsp;&nbsp;Toronto</p>
     <p class="hero__tagline reveal">Welcome to my page. Scroll down to explore!</p>
     <a href="#about" class="scroll-indicator reveal" aria-label="Scroll to About section">
@@ -85,6 +90,7 @@
 
     <section id="work" class="section">
       <h2 class="section__title reveal">My Work</h2>
+      <p class="work-grid__intro reveal">Here are my last 3 videos</p>
       <div class="work-grid" id="work-grid">
         <div class="work-card reveal">
           <iframe src="https://www.youtube.com/embed/hjU81Fc3_ts" title="Yash Contractor on YouTube Shorts" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -102,19 +108,62 @@
       <div class="contact">
         <div class="contact__text reveal">
           <p class="section__eyebrow">Contact</p>
-          <h2 class="section__title">Let's talk</h2>
+          <h2 class="contact__heading">Let's work<br />together.</h2>
           <p class="about__bio">
             For collabs, brand partnerships, or just to say hi — my inbox is open.
           </p>
-          <a href="mailto:yashcontractor.media@gmail.com" class="btn btn--gold contact__email">
-            yashcontractor.media@gmail.com
-          </a>
+
+          <div class="contact__email-box">
+            <p class="contact__box-label">Direct Email</p>
+            <a href="mailto:yashcontractor.media@gmail.com" class="contact__email-link">
+              yashcontractor.media@gmail.com
+            </a>
+          </div>
+
+          <p class="contact__box-label contact__connect-label">Connect</p>
+          <div class="contact__socials">
+            <a href="https://www.instagram.com/yashhc_" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@yashhc_" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 3v10.7a3.3 3.3 0 1 1-2.6-3.23" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 3c.4 2.4 2.2 4.2 4.6 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@YashContractor" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg>
+            </a>
+          </div>
         </div>
-        <div class="contact__socials reveal">
-          <a href="https://www.instagram.com/yashhc_" target="_blank" rel="noopener noreferrer" class="social-pill">Instagram</a>
-          <a href="https://www.tiktok.com/@yashhc_" target="_blank" rel="noopener noreferrer" class="social-pill">TikTok</a>
-          <a href="https://www.youtube.com/@YashContractor" target="_blank" rel="noopener noreferrer" class="social-pill">YouTube</a>
-        </div>
+
+        <form name="contact" method="POST" data-netlify="true" class="contact-form reveal">
+          <input type="hidden" name="form-name" value="contact" />
+          <h3 class="contact-form__title">Send a message</h3>
+
+          <div class="contact-form__row">
+            <label>Name
+              <input type="text" name="name" placeholder="Jane Smith" required />
+            </label>
+            <label>Email
+              <input type="email" name="email" placeholder="jane@company.com" required />
+            </label>
+          </div>
+
+          <label>I'm interested in
+            <select name="interest">
+              <option>Brand Partnership</option>
+              <option>Collab</option>
+              <option>Just Saying Hi</option>
+            </select>
+          </label>
+
+          <label>Message
+            <textarea name="message" rows="5" placeholder="Tell me about your project or what you'd like to discuss..." required></textarea>
+          </label>
+
+          <button type="submit" class="btn btn--gold contact-form__submit">
+            Send message
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
       </div>
     </section>
   </main>

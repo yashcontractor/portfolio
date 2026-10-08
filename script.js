@@ -1,15 +1,29 @@
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// Theme toggle (dark / beige light mode)
+const themeToggle = document.getElementById("theme-toggle");
+const root = document.documentElement;
+if (localStorage.getItem("theme") === "light") {
+  root.setAttribute("data-theme", "light");
+}
+themeToggle.addEventListener("click", () => {
+  const isLight = root.getAttribute("data-theme") === "light";
+  if (isLight) {
+    root.removeAttribute("data-theme");
+    localStorage.setItem("theme", "dark");
+  } else {
+    root.setAttribute("data-theme", "light");
+    localStorage.setItem("theme", "light");
+  }
+});
+
 // Scroll reveal animation
 const revealEls = document.querySelectorAll(".reveal");
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
+      entry.target.classList.toggle("is-visible", entry.isIntersecting);
     });
   },
   { threshold: 0.15 }
