@@ -48,7 +48,9 @@ const observer = new IntersectionObserver(
   { threshold: 0.15 }
 );
 revealEls.forEach((el, i) => {
-  el.style.transitionDelay = `${(i % 4) * 0.08}s`;
+  if (!el.closest(".hero")) {
+    el.style.transitionDelay = `${(i % 4) * 0.08}s`;
+  }
   observer.observe(el);
 });
 
