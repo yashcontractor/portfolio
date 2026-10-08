@@ -1,6 +1,60 @@
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// Work card 3D tilt — follows cursor position, keeps each card's original rotation
+function attachWorkCardTilt() {
+  document.querySelectorAll(".work-card:not([data-tilt-bound])").forEach((card) => {
+    card.setAttribute("data-tilt-bound", "true");
+    const maxTilt = 10;
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      const ry = (x - 0.5) * 2 * maxTilt;
+      const rx = (0.5 - y) * 2 * maxTilt;
+      card.style.setProperty("--rx", `${rx}deg`);
+      card.style.setProperty("--ry", `${ry}deg`);
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.setProperty("--rx", "0deg");
+      card.style.setProperty("--ry", "0deg");
+    });
+    // The YouTube iframe swallows mouse events, freezing the tilt mid-hover.
+    // Keep it non-interactive for tracking, but briefly re-enable it on click
+    // so the embedded play button still works.
+    const iframe = card.querySelector("iframe");
+    if (iframe) {
+      iframe.style.pointerEvents = "none";
+      card.addEventListener("mousedown", () => {
+        iframe.style.pointerEvents = "auto";
+        setTimeout(() => {
+          iframe.style.pointerEvents = "none";
+        }, 300);
+      });
+    }
+  });
+}
+attachWorkCardTilt();
+
+// About photo 3D tilt — follows cursor position, resets on leave
+const photoFrame = document.querySelector(".about__photo-frame");
+if (photoFrame) {
+  const maxTilt = 14;
+  photoFrame.addEventListener("mousemove", (e) => {
+    const rect = photoFrame.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const rotateY = (x - 0.5) * 2 * maxTilt;
+    const rotateX = (0.5 - y) * 2 * maxTilt;
+    photoFrame.style.transition = "transform 0.1s ease-out";
+    photoFrame.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+  });
+  photoFrame.addEventListener("mouseleave", () => {
+    photoFrame.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+    photoFrame.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+  });
+}
+
 // Theme toggle (dark / beige light mode)
 const themeToggle = document.getElementById("theme-toggle");
 const root = document.documentElement;
@@ -139,6 +193,7 @@ dotSections.forEach((section) => dotObserver.observe(section));
         </div>`
       )
       .join("");
+    attachWorkCardTilt();
   } catch (err) {
     console.warn("Could not auto-load latest YouTube Shorts, keeping static fallback.", err);
   }
