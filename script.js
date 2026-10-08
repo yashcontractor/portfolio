@@ -90,3 +90,42 @@ const dotObserver = new IntersectionObserver(
   { threshold: 0.5 }
 );
 dotSections.forEach((section) => dotObserver.observe(section));
+
+// Auto-fetch latest YouTube Shorts into the "My Work" grid
+(async function loadLatestShorts() {
+  const API_KEY = "AIzaSyAHY-NLVGlrbll9KDNBidLnDe047Dy51Ps";
+  const UPLOADS_PLAYLIST_ID = "UUiYuZEnkdxPYBjrofgot6VA";
+  const VIDEO_COUNT = 3;
+  const workGrid = document.getElementById("work-grid");
+  if (!workGrid) return;
+
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=6&playlistId=${UPLOADS_PLAYLIST_ID}&key=${API_KEY}`
+    );
+    if (!res.ok) throw new Error(`YouTube API error: ${res.status}`);
+    const data = await res.json();
+
+    const videos = (data.items || [])
+      .map((item) => ({
+        videoId: item.snippet.resourceId.videoId,
+        publishedAt: item.snippet.publishedAt,
+        title: item.snippet.title,
+      }))
+      .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
+      .slice(0, VIDEO_COUNT);
+
+    if (videos.length === 0) return;
+
+    workGrid.innerHTML = videos
+      .map(
+        (v) => `
+        <div class="work-card reveal is-visible">
+          <iframe src="https://www.youtube.com/embed/${v.videoId}" title="${v.title.replace(/"/g, "&quot;")}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>`
+      )
+      .join("");
+  } catch (err) {
+    console.warn("Could not auto-load latest YouTube Shorts, keeping static fallback.", err);
+  }
+})();
