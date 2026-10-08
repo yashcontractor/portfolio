@@ -1,28 +1,6 @@
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Work card 3D tilt — follows cursor position, keeps each card's original rotation
-function attachWorkCardTilt() {
-  document.querySelectorAll(".work-card:not([data-tilt-bound])").forEach((card) => {
-    card.setAttribute("data-tilt-bound", "true");
-    const maxTilt = 10;
-    card.addEventListener("mousemove", (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      const ry = (x - 0.5) * 2 * maxTilt;
-      const rx = (0.5 - y) * 2 * maxTilt;
-      card.style.setProperty("--rx", `${rx}deg`);
-      card.style.setProperty("--ry", `${ry}deg`);
-    });
-    card.addEventListener("mouseleave", () => {
-      card.style.setProperty("--rx", "0deg");
-      card.style.setProperty("--ry", "0deg");
-    });
-  });
-}
-attachWorkCardTilt();
-
 // About photo 3D tilt — follows cursor position, resets on leave
 const photoFrame = document.querySelector(".about__photo-frame");
 if (photoFrame) {
@@ -180,7 +158,6 @@ dotSections.forEach((section) => dotObserver.observe(section));
         </div>`
       )
       .join("");
-    attachWorkCardTilt();
   } catch (err) {
     console.warn("Could not auto-load latest YouTube Shorts, keeping static fallback.", err);
   }

@@ -368,10 +368,11 @@ body {
 .work-card:nth-child(3) { --tilt: -1.6deg; margin-top: 1.6rem; }
 .work-card.reveal { transform: translateY(24px) rotate(var(--tilt, 0deg)); }
 .work-card.reveal.is-visible {
-  transform: translateY(0) rotate(var(--tilt, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform: translateY(0) rotate(var(--tilt, 0deg));
 }
 .work-card.reveal.is-visible:hover {
-  transform: translateY(-6px) rotate(var(--tilt, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform: translateY(-6px) rotate(var(--tilt, 0deg));
+  box-shadow: 0 0 40px rgba(231, 182, 76, 0.35);
 }
 .work-card iframe {
   width: 100%;
