@@ -102,8 +102,13 @@ const CURSOR_GLOW_RADIUS = 140;
 const CONVERGE_MS = 1500;
 const HOLD_MS = 450;
 const FADE_MS = 400;
-const STAR_WHITE = [243, 238, 216];
-const STAR_GOLD = [231, 182, 76];
+const STAR_PALETTE = {
+  dark: { white: [243, 238, 216], gold: [240, 198, 106], base: [243, 238, 216], bright: [248, 245, 232] },
+  light: { white: [74, 63, 53], gold: [173, 122, 36], base: [107, 97, 85], bright: [74, 63, 53] },
+};
+function isLightTheme() {
+  return document.documentElement.getAttribute("data-theme") === "light";
+}
 let introState = null;
 
 function lerp(a, b, t) {
@@ -131,7 +136,6 @@ function startStarIntro() {
     return;
   }
 
-  const rect = titleEl.getBoundingClientRect();
   const computed = getComputedStyle(titleEl);
   const sampleCanvas = document.createElement("canvas");
   sampleCanvas.width = canvas.width;
@@ -141,7 +145,33 @@ function startStarIntro() {
   sctx.textAlign = "center";
   sctx.textBaseline = "middle";
   sctx.font = `${computed.fontWeight} ${parseFloat(computed.fontSize)}px ${computed.fontFamily}`;
-  sctx.fillText(titleEl.textContent.trim(), rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+  // Sample each word at its own rendered position so the particle shape
+  // matches however the browser actually wraps the title (one line on
+  // desktop, multiple lines on narrow screens), instead of assuming a
+  // single line centered on the element's full bounding box.
+  const textNode = titleEl.firstChild;
+  const fullText = titleEl.textContent.trim();
+  const words = fullText.split(" ");
+  const range = document.createRange();
+  let searchFrom = 0;
+  let drewAny = false;
+  words.forEach((word) => {
+    const start = fullText.indexOf(word, searchFrom);
+    const end = start + word.length;
+    searchFrom = end;
+    range.setStart(textNode, start);
+    range.setEnd(textNode, end);
+    const wordRect = range.getBoundingClientRect();
+    if (wordRect.width && wordRect.height) {
+      sctx.fillText(word, wordRect.left + wordRect.width / 2, wordRect.top + wordRect.height / 2);
+      drewAny = true;
+    }
+  });
+  if (!drewAny) {
+    const rect = titleEl.getBoundingClientRect();
+    sctx.fillText(fullText, rect.left + rect.width / 2, rect.top + rect.height / 2);
+  }
 
   const imgData = sctx.getImageData(0, 0, sampleCanvas.width, sampleCanvas.height).data;
   const step = 4;
@@ -192,6 +222,7 @@ function startStarIntro() {
 
 function drawIntroParticles(now) {
   if (!introState) return;
+  const palette = isLightTheme() ? STAR_PALETTE.light : STAR_PALETTE.dark;
   const elapsed = now - introState.startTime;
   introState.particles.forEach((p) => {
     let x, y, opacity, color;
@@ -201,19 +232,19 @@ function drawIntroParticles(now) {
       x = lerp(p.startX, p.targetX, e);
       y = lerp(p.startY, p.targetY, e);
       opacity = localT;
-      color = lerpColor(STAR_WHITE, STAR_GOLD, e);
+      color = lerpColor(palette.white, palette.gold, e);
     } else if (elapsed < CONVERGE_MS + HOLD_MS) {
       x = p.targetX;
       y = p.targetY;
       opacity = 0.85 + 0.15 * Math.sin(elapsed * 0.01 + p.delay);
-      color = STAR_GOLD;
+      color = palette.gold;
     } else {
       const t2 = Math.min(1, (elapsed - CONVERGE_MS - HOLD_MS) / FADE_MS);
       const e = easeInOutCubic(t2);
       x = p.targetX;
       y = p.targetY;
       opacity = 1 - e;
-      color = STAR_GOLD;
+      color = palette.gold;
     }
     ctx.beginPath();
     ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${Math.max(0, opacity)})`;
@@ -232,6 +263,7 @@ if (document.fonts && document.fonts.ready) {
 
 function drawStars(time) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const palette = isLightTheme() ? STAR_PALETTE.light : STAR_PALETTE.dark;
   stars.forEach((s) => {
     const twinkle = 0.5 + 0.5 * Math.sin(time * 0.001 * s.speed + s.offset);
     let opacity = s.baseOpacity * twinkle;
@@ -247,8 +279,8 @@ function drawStars(time) {
       const glowRadius = s.radius * (s.glow ? 10 : 6 + boost * 6);
       const glowOpacity = s.glow ? opacity * 0.9 : opacity * 0.6 * boost;
       const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glowRadius);
-      grad.addColorStop(0, `rgba(243, 238, 216, ${glowOpacity})`);
-      grad.addColorStop(1, "rgba(243, 238, 216, 0)");
+      grad.addColorStop(0, `rgba(${palette.base[0]}, ${palette.base[1]}, ${palette.base[2]}, ${glowOpacity})`);
+      grad.addColorStop(1, `rgba(${palette.base[0]}, ${palette.base[1]}, ${palette.base[2]}, 0)`);
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(s.x, s.y, glowRadius, 0, Math.PI * 2);
@@ -257,8 +289,8 @@ function drawStars(time) {
 
     ctx.beginPath();
     ctx.fillStyle = s.glow
-      ? `rgba(248, 245, 232, ${opacity})`
-      : `rgba(243, 238, 216, ${opacity * 0.85})`;
+      ? `rgba(${palette.bright[0]}, ${palette.bright[1]}, ${palette.bright[2]}, ${opacity})`
+      : `rgba(${palette.base[0]}, ${palette.base[1]}, ${palette.base[2]}, ${opacity * 0.85})`;
     ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
     ctx.fill();
   });

@@ -3,13 +3,14 @@
   --bg-alt: #0a0a0c;
   --text: #f2f0eb;
   --text-muted: #9a978f;
-  --gold: #e7b64c;
-  --gold-soft: rgba(231, 182, 76, 0.14);
+  --gold: #f0c66a;
+  --gold-soft: rgba(240, 198, 106, 0.14);
   --glass-bg: rgba(255, 255, 255, 0.035);
   --glass-border: rgba(255, 255, 255, 0.09);
   --radius: 20px;
   --font-heading: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
 }
 
 [data-theme="light"] {
@@ -22,7 +23,6 @@
   --glass-bg: rgba(0, 0, 0, 0.035);
   --glass-border: rgba(0, 0, 0, 0.09);
 }
-[data-theme="light"] #stars-canvas,
 [data-theme="light"] .grain {
   display: none;
 }
@@ -166,19 +166,27 @@ body {
   padding: 6rem 1.5rem 4rem;
 }
 .hero__title {
-  font-family: var(--font-heading);
-  font-weight: 300;
-  font-size: clamp(3.2rem, 11vw, 7.5rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.6rem, 13vw, 9rem);
   margin: 0;
   line-height: 1;
   letter-spacing: -0.01em;
-  background: linear-gradient(90deg, #a9791f, #f3d37a, #e7b64c, #f3d37a, #a9791f);
+  background: linear-gradient(90deg, #c99a3a, #f8dfa6, #f0c66a, #f8dfa6, #c99a3a);
   background-size: 250% auto;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: title-shimmer 7s linear infinite;
+}
+[data-theme="light"] .hero__title {
+  background: linear-gradient(90deg, #a9791f, #f3d37a, #e7b64c, #f3d37a, #a9791f);
+  background-size: 250% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 @keyframes title-shimmer {
   to {
@@ -310,7 +318,7 @@ body {
 /* About */
 .about {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 270px 1fr;
   gap: 3rem;
   align-items: center;
 }
@@ -620,7 +628,7 @@ body.intro-active .hero__contact-btn {
 /* Responsive */
 @media (max-width: 720px) {
   .about { grid-template-columns: 1fr; }
-  .about__photo-frame { width: 140px; margin: 0 auto; }
+  .about__photo-frame { width: 170px; margin: 0 auto; }
   .contact { grid-template-columns: 1fr; }
   .contact-form__row { grid-template-columns: 1fr; }
   .nav__links { gap: 1rem; }
