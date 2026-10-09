@@ -1,3 +1,6 @@
+// Gate hero text visibility until the star-formation intro finishes
+document.body.classList.add("intro-active");
+
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -94,6 +97,135 @@ window.addEventListener("mouseleave", () => {
 
 const CURSOR_GLOW_RADIUS = 140;
 
+// Intro: starfield particles converge into the hero name, hold, then disperse
+const CONVERGE_MS = 1500;
+const HOLD_MS = 900;
+const DISPERSE_MS = 1300;
+const STAR_WHITE = [243, 238, 216];
+const STAR_GOLD = [231, 182, 76];
+let introState = null;
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+function lerpColor(c1, c2, t) {
+  return [
+    Math.round(lerp(c1[0], c2[0], t)),
+    Math.round(lerp(c1[1], c2[1], t)),
+    Math.round(lerp(c1[2], c2[2], t)),
+  ];
+}
+
+function startStarIntro() {
+  const titleEl = document.querySelector(".hero__title");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion || !titleEl) {
+    document.body.classList.remove("intro-active");
+    return;
+  }
+
+  const rect = titleEl.getBoundingClientRect();
+  const computed = getComputedStyle(titleEl);
+  const sampleCanvas = document.createElement("canvas");
+  sampleCanvas.width = canvas.width;
+  sampleCanvas.height = canvas.height;
+  const sctx = sampleCanvas.getContext("2d");
+  sctx.fillStyle = "#fff";
+  sctx.textAlign = "center";
+  sctx.textBaseline = "middle";
+  sctx.font = `${computed.fontWeight} ${parseFloat(computed.fontSize)}px ${computed.fontFamily}`;
+  sctx.fillText(titleEl.textContent.trim(), rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+  const imgData = sctx.getImageData(0, 0, sampleCanvas.width, sampleCanvas.height).data;
+  const step = 4;
+  const points = [];
+  for (let y = 0; y < sampleCanvas.height; y += step) {
+    for (let x = 0; x < sampleCanvas.width; x += step) {
+      if (imgData[(y * sampleCanvas.width + x) * 4 + 3] > 128) {
+        points.push({ x, y });
+      }
+    }
+  }
+
+  if (!points.length) {
+    document.body.classList.remove("intro-active");
+    return;
+  }
+
+  for (let i = points.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [points[i], points[j]] = [points[j], points[i]];
+  }
+
+  const particles = points.map((p) => {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.max(canvas.width, canvas.height) * (0.6 + Math.random() * 0.6);
+    return {
+      startX: p.x + Math.cos(angle) * dist,
+      startY: p.y + Math.sin(angle) * dist,
+      targetX: p.x,
+      targetY: p.y,
+      restX: Math.random() * canvas.width,
+      restY: Math.random() * canvas.height,
+      delay: Math.random() * 350,
+      radius: Math.random() * 1.1 + 0.5,
+    };
+  });
+
+  introState = { particles, startTime: performance.now() };
+
+  window.setTimeout(() => {
+    introState = null;
+    document.body.classList.remove("intro-active");
+  }, CONVERGE_MS + HOLD_MS + DISPERSE_MS + 150);
+}
+
+function drawIntroParticles(now) {
+  if (!introState) return;
+  const elapsed = now - introState.startTime;
+  introState.particles.forEach((p) => {
+    let x, y, opacity, color;
+    if (elapsed < CONVERGE_MS + p.delay) {
+      const localT = Math.min(1, Math.max(0, (elapsed - p.delay) / CONVERGE_MS));
+      const e = easeOutCubic(localT);
+      x = lerp(p.startX, p.targetX, e);
+      y = lerp(p.startY, p.targetY, e);
+      opacity = localT;
+      color = lerpColor(STAR_WHITE, STAR_GOLD, e);
+    } else if (elapsed < CONVERGE_MS + HOLD_MS) {
+      x = p.targetX;
+      y = p.targetY;
+      opacity = 0.85 + 0.15 * Math.sin(elapsed * 0.01 + p.delay);
+      color = STAR_GOLD;
+    } else {
+      const t2 = Math.min(1, (elapsed - CONVERGE_MS - HOLD_MS) / DISPERSE_MS);
+      const e = easeInOutCubic(t2);
+      x = lerp(p.targetX, p.restX, e);
+      y = lerp(p.targetY, p.restY, e);
+      opacity = 1 - e;
+      color = STAR_GOLD;
+    }
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${Math.max(0, opacity)})`;
+    ctx.arc(x, y, p.radius, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => {
+    requestAnimationFrame(() => requestAnimationFrame(startStarIntro));
+  });
+} else {
+  window.addEventListener("load", startStarIntro);
+}
+
 function drawStars(time) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   stars.forEach((s) => {
@@ -126,6 +258,7 @@ function drawStars(time) {
     ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
     ctx.fill();
   });
+  drawIntroParticles(time);
   requestAnimationFrame(drawStars);
 }
 requestAnimationFrame(drawStars);
@@ -147,6 +280,57 @@ const dotObserver = new IntersectionObserver(
   { threshold: 0.5 }
 );
 dotSections.forEach((section) => dotObserver.observe(section));
+
+// Hero scroll-linked parallax exit — content drifts apart, scales down and
+// fades with depth as you scroll past, instead of a flat scroll-off.
+const heroEl = document.getElementById("top");
+const heroTitle = document.querySelector(".hero__title");
+const heroRole = document.querySelector(".hero__role");
+const heroTagline = document.querySelector(".hero__tagline");
+const heroScrollIndicator = document.querySelector(".hero .scroll-indicator");
+const heroCta = document.querySelector(".hero__cta");
+const heroContactBtn = document.querySelector(".hero__contact-btn");
+
+const parallaxTransformTargets = [
+  { el: heroTitle, yMul: 60, xMul: -20, scaleMul: 0.1 },
+  { el: heroRole, yMul: 95, xMul: 25, scaleMul: 0.14 },
+  { el: heroTagline, yMul: 130, xMul: -35, scaleMul: 0.18 },
+  { el: heroCta, yMul: 150, xMul: 40, scaleMul: 0.16 },
+];
+const parallaxOpacityOnlyTargets = [heroScrollIndicator, heroContactBtn];
+
+let parallaxTicking = false;
+function updateHeroParallax() {
+  parallaxTicking = false;
+  if (!heroEl || document.body.classList.contains("intro-active")) return;
+
+  const progress = Math.min(1, Math.max(0, window.scrollY / (heroEl.offsetHeight * 0.9)));
+  const eased = progress * progress;
+  const opacity = Math.max(0, 1 - progress * 1.3);
+
+  parallaxTransformTargets.forEach(({ el, yMul, xMul, scaleMul }) => {
+    if (!el) return;
+    const translateY = -eased * yMul;
+    const translateX = eased * xMul;
+    const scale = 1 - eased * scaleMul;
+    el.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    el.style.opacity = opacity;
+  });
+  parallaxOpacityOnlyTargets.forEach((el) => {
+    if (!el) return;
+    el.style.opacity = opacity;
+  });
+}
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!parallaxTicking) {
+      parallaxTicking = true;
+      requestAnimationFrame(updateHeroParallax);
+    }
+  },
+  { passive: true }
+);
 
 // Auto-fetch latest YouTube Shorts into the "My Work" grid
 (async function loadLatestShorts() {

@@ -605,6 +605,17 @@ body {
 .hero__cta.reveal { transition-delay: 0.48s; }
 .hero__contact-btn.reveal { transition-delay: 0.6s; }
 
+/* Keep hero text hidden while the star-formation intro plays on canvas */
+body.intro-active .hero__title,
+body.intro-active .hero__role,
+body.intro-active .hero__tagline,
+body.intro-active .hero .scroll-indicator,
+body.intro-active .hero__cta,
+body.intro-active .hero__contact-btn {
+  opacity: 0 !important;
+  transition: none !important;
+}
+
 /* Responsive */
 @media (max-width: 720px) {
   .about { grid-template-columns: 1fr; }
