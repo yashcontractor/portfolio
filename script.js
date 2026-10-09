@@ -97,10 +97,11 @@ window.addEventListener("mouseleave", () => {
 
 const CURSOR_GLOW_RADIUS = 140;
 
-// Intro: starfield particles converge into the hero name, hold, then disperse
+// Intro: starfield particles converge into the hero name, hold, then
+// smoothly dissolve into the real gradient-text title in place.
 const CONVERGE_MS = 1500;
 const HOLD_MS = 900;
-const DISPERSE_MS = 1300;
+const FADE_MS = 700;
 const STAR_WHITE = [243, 238, 216];
 const STAR_GOLD = [231, 182, 76];
 let introState = null;
@@ -171,8 +172,6 @@ function startStarIntro() {
       startY: p.y + Math.sin(angle) * dist,
       targetX: p.x,
       targetY: p.y,
-      restX: Math.random() * canvas.width,
-      restY: Math.random() * canvas.height,
       delay: Math.random() * 350,
       radius: Math.random() * 1.1 + 0.5,
     };
@@ -180,10 +179,15 @@ function startStarIntro() {
 
   introState = { particles, startTime: performance.now() };
 
+  // Start fading the real text in just as the particles begin to dissolve,
+  // so the two crossfade into each other at the same spot.
+  window.setTimeout(() => {
+    document.body.classList.remove("intro-active");
+  }, CONVERGE_MS + HOLD_MS);
+
   window.setTimeout(() => {
     introState = null;
-    document.body.classList.remove("intro-active");
-  }, CONVERGE_MS + HOLD_MS + DISPERSE_MS + 150);
+  }, CONVERGE_MS + HOLD_MS + FADE_MS + 150);
 }
 
 function drawIntroParticles(now) {
@@ -204,10 +208,10 @@ function drawIntroParticles(now) {
       opacity = 0.85 + 0.15 * Math.sin(elapsed * 0.01 + p.delay);
       color = STAR_GOLD;
     } else {
-      const t2 = Math.min(1, (elapsed - CONVERGE_MS - HOLD_MS) / DISPERSE_MS);
+      const t2 = Math.min(1, (elapsed - CONVERGE_MS - HOLD_MS) / FADE_MS);
       const e = easeInOutCubic(t2);
-      x = lerp(p.targetX, p.restX, e);
-      y = lerp(p.targetY, p.restY, e);
+      x = p.targetX;
+      y = p.targetY;
       opacity = 1 - e;
       color = STAR_GOLD;
     }
