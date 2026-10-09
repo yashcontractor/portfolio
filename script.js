@@ -81,19 +81,41 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
+let mouseX = -9999;
+let mouseY = -9999;
+window.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+window.addEventListener("mouseleave", () => {
+  mouseX = -9999;
+  mouseY = -9999;
+});
+
+const CURSOR_GLOW_RADIUS = 140;
+
 function drawStars(time) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   stars.forEach((s) => {
     const twinkle = 0.5 + 0.5 * Math.sin(time * 0.001 * s.speed + s.offset);
-    const opacity = s.baseOpacity * twinkle;
+    let opacity = s.baseOpacity * twinkle;
 
-    if (s.glow) {
-      const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.radius * 10);
-      grad.addColorStop(0, `rgba(243, 238, 216, ${opacity * 0.9})`);
+    const dx = s.x - mouseX;
+    const dy = s.y - mouseY;
+    const proximity = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / CURSOR_GLOW_RADIUS);
+    const boost = proximity * proximity;
+    const radius = s.radius * (1 + boost * 2.2);
+    opacity = Math.min(1, opacity * (1 + boost * 1.1));
+
+    if (s.glow || boost > 0.05) {
+      const glowRadius = s.radius * (s.glow ? 10 : 6 + boost * 6);
+      const glowOpacity = s.glow ? opacity * 0.9 : opacity * 0.6 * boost;
+      const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glowRadius);
+      grad.addColorStop(0, `rgba(243, 238, 216, ${glowOpacity})`);
       grad.addColorStop(1, "rgba(243, 238, 216, 0)");
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.radius * 10, 0, Math.PI * 2);
+      ctx.arc(s.x, s.y, glowRadius, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -101,7 +123,7 @@ function drawStars(time) {
     ctx.fillStyle = s.glow
       ? `rgba(248, 245, 232, ${opacity})`
       : `rgba(243, 238, 216, ${opacity * 0.85})`;
-    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+    ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
     ctx.fill();
   });
   requestAnimationFrame(drawStars);
