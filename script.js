@@ -100,8 +100,8 @@ const CURSOR_GLOW_RADIUS = 140;
 // Intro: starfield particles converge into the hero name, hold, then
 // smoothly dissolve into the real gradient-text title in place.
 const CONVERGE_MS = 1500;
-const HOLD_MS = 900;
-const FADE_MS = 700;
+const HOLD_MS = 450;
+const FADE_MS = 400;
 const STAR_WHITE = [243, 238, 216];
 const STAR_GOLD = [231, 182, 76];
 let introState = null;
