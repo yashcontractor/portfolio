@@ -168,11 +168,22 @@ body {
 .hero__title {
   font-family: var(--font-heading);
   font-weight: 300;
-  color: var(--gold);
   font-size: clamp(3.2rem, 11vw, 7.5rem);
   margin: 0;
   line-height: 1;
   letter-spacing: -0.01em;
+  background: linear-gradient(90deg, #a9791f, #f3d37a, #e7b64c, #f3d37a, #a9791f);
+  background-size: 250% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: title-shimmer 7s linear infinite;
+}
+@keyframes title-shimmer {
+  to {
+    background-position: -250% center;
+  }
 }
 .hero__role {
   font-family: var(--font-heading);
